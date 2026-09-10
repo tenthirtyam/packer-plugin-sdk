@@ -249,9 +249,8 @@ func (cmd *Command) Run(args []string) int {
 				log.Fatal(err)
 				return 1
 			}
-			defer outputFile.Close()
-
 			err = structDocsTemplate.Execute(outputFile, str)
+			outputFile.Close()
 			if err != nil {
 				log.Fatalf("%v", err)
 			}

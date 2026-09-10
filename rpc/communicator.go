@@ -223,7 +223,7 @@ func (c *CommunicatorServer) Start(args *CommunicatorStartArgs, reply *interface
 	go func() {
 		<-doneCh
 		for _, conn := range toClose {
-			defer conn.Close()
+			conn.Close()
 		}
 	}()
 

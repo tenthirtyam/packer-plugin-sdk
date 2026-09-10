@@ -55,6 +55,13 @@ func (b *BasicRunner) Run(ctx context.Context, state StateBag) {
 		}
 	}()
 
+	var completed []Step
+	defer func() {
+		for i := len(completed) - 1; i >= 0; i-- {
+			completed[i].Cleanup(state)
+		}
+	}()
+
 	for _, step := range b.Steps {
 		if step == nil {
 			continue
@@ -71,7 +78,7 @@ func (b *BasicRunner) Run(ctx context.Context, state StateBag) {
 		}
 
 		action := step.Run(ctx, state)
-		defer step.Cleanup(state)
+		completed = append(completed, step)
 
 		if _, ok := state.GetOk(StateCancelled); ok {
 			break
